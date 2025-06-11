@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 7%; /* Very Dark Blue-Gray */
+    --foreground: 210 20% 95%; /* Light Cool Gray */
+
+    --card: 220 20% 10%; /* Darker Blue-Gray */
+    --card-foreground: 210 20% 95%; /* Light Cool Gray */
+
+    --popover: 220 20% 9%; /* Slightly darker than card for popovers */
+    --popover-foreground: 210 20% 95%; /* Light Cool Gray */
+
+    --primary: 190 70% 55%; /* Bright Cyan/Blue */
+    --primary-foreground: 210 20% 95%; /* Light Cool Gray */
+
+    --secondary: 220 15% 20%; /* Dark Muted Blue-Gray */
+    --secondary-foreground: 210 20% 90%; /* Light Cool Gray for text on secondary */
+
+    --muted: 220 15% 15%; /* Darker Muted Blue-Gray */
+    --muted-foreground: 210 15% 65%; /* Medium Cool Gray */
+
+    --accent: 190 70% 55%; /* Bright Cyan/Blue (same as primary) */
+    --accent-foreground: 210 20% 95%; /* Light Cool Gray */
+
+    --destructive: 0 63% 50%; /* Vivid Red */
+    --destructive-foreground: 0 0% 100%; /* White */
+
+    --success: 145 63% 49%; /* Emerald Green */
+    --success-foreground: 0 0% 100%; /* White */
+
+    --border: 220 15% 18%; /* Border color - slightly lighter than muted */
+    --input: 220 15% 18%; /* Input background - same as border */
+    --ring: 190 70% 60%; /* Slightly lighter/more saturated blue for rings */
+
+    --radius: 0.5rem;
+
+    /* Chart Colors for the Dark Theme */
+    --chart-1: 190 70% 55%; /* Primary Cyan/Blue */
+    --chart-2: 180 60% 65%; /* Lighter Cyan/Teal */
+    --chart-3: 210 20% 70%; /* Medium Light Cool Gray */
+    --chart-4: 230 50% 70%; /* Soft Indigo/Purple */
+    --chart-5: 190 50% 40%; /* Darker Cyan/Blue */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
