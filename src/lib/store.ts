@@ -193,81 +193,80 @@ export const addTransactionToStore = async (
 
 export const getUniqueBetMonths = async (): Promise<string[]> => {
   console.log("Supabase: getUniqueBetMonths called");
-  const months = new Set<string>();
+  try {
+    const months = new Set<string>();
 
-  // Obtener de 'bets'
-  const { data: betsData, error: betsError } = await supabase
-    .from("bets")
-    .select("created_at, resolved_at");
+    // Obtener de 'bets'
+    const { data: betsData, error: betsError } = await supabase
+      .from("bets")
+      .select("created_at, resolved_at");
 
-  if (betsError) {
-    console.error("Error fetching bet dates for unique months:", betsError);
-  } else if (betsData) {
-    betsData.forEach((item) => {
-      if (item.created_at) {
-        const date = new Date(item.created_at);
-        // Comprobar si la fecha es válida
-        if (!isNaN(date.getTime())) {
-          months.add(
-            `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-              2,
-              "0"
-            )}`
-          );
-        } else {
-          console.warn(
-            "Fecha created_at inválida encontrada:",
-            item.created_at
-          );
+    if (betsError) {
+      console.error("Error fetching bet dates for unique months:", betsError);
+      throw betsError;
+    }
+
+    if (betsData) {
+      betsData.forEach((item) => {
+        if (item.created_at) {
+          const date = new Date(item.created_at);
+          if (!isNaN(date.getTime())) {
+            months.add(
+              `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+                2,
+                "0"
+              )}`
+            );
+          }
         }
-      }
-      if (item.resolved_at) {
-        const date = new Date(item.resolved_at);
-        if (!isNaN(date.getTime())) {
-          months.add(
-            `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-              2,
-              "0"
-            )}`
-          );
-        } else {
-          console.warn(
-            "Fecha resolved_at inválida encontrada:",
-            item.resolved_at
-          );
+        if (item.resolved_at) {
+          const date = new Date(item.resolved_at);
+          if (!isNaN(date.getTime())) {
+            months.add(
+              `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+                2,
+                "0"
+              )}`
+            );
+          }
         }
-      }
-    });
+      });
+    }
+
+    // Obtener de 'transactions'
+    const { data: transactionsData, error: transactionsError } = await supabase
+      .from("transactions")
+      .select("date");
+
+    if (transactionsError) {
+      console.error(
+        "Error fetching transaction dates for unique months:",
+        transactionsError
+      );
+      throw transactionsError;
+    }
+
+    if (transactionsData) {
+      transactionsData.forEach((item) => {
+        if (item.date) {
+          const date = new Date(item.date);
+          if (!isNaN(date.getTime())) {
+            months.add(
+              `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+                2,
+                "0"
+              )}`
+            );
+          }
+        }
+      });
+    }
+
+    // Ordenar los meses en orden descendente (más reciente primero)
+    return Array.from(months).sort((a, b) => b.localeCompare(a));
+  } catch (error) {
+    console.error("Error in getUniqueBetMonths:", error);
+    // Return an empty array instead of throwing to prevent UI from breaking
+    return [];
   }
-
-  // Obtener de 'transactions'
-  const { data: transactionsData, error: transactionsError } = await supabase
-    .from("transactions")
-    .select("date");
-
-  if (transactionsError) {
-    console.error(
-      "Error fetching transaction dates for unique months:",
-      transactionsError
-    );
-  } else if (transactionsData) {
-    transactionsData.forEach((item) => {
-      if (item.date) {
-        // 'date' es el nombre de la columna en transactions
-        const date = new Date(item.date);
-        if (!isNaN(date.getTime())) {
-          months.add(
-            `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-              2,
-              "0"
-            )}`
-          );
-        } else {
-          console.warn("Fecha de transacción inválida encontrada:", item.date);
-        }
-      }
-    });
-  }
-  // Ordenar los meses en orden descendente (más reciente primero)
-  return Array.from(months).sort((a, b) => b.localeCompare(a));
 };
