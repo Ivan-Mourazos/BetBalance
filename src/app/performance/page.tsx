@@ -5,7 +5,6 @@ import {
 } from "@/lib/actions";
 import { calculateOverallStats } from "@/lib/statsUtils";
 import MonthSelector from "@/components/MonthSelector";
-import { getKpiBets } from "@/lib/store";
 
 export default async function PerformancePage({
   searchParams,
@@ -14,16 +13,6 @@ export default async function PerformancePage({
 }) {
   const params = await searchParams;
   const selectedMonth = params?.month;
-
-  // Si no hay mes seleccionado, mostramos los KPIs globales desde la vista SQL
-  let kpi = null;
-  if (!selectedMonth || selectedMonth === "all-time") {
-    try {
-      kpi = await getKpiBets();
-    } catch (e) {
-      console.error("No se pudieron obtener los KPIs globales:", e);
-    }
-  }
 
   const [allBets, allTransactions, availableMonths] = await Promise.all([
     fetchBets(),
@@ -72,9 +61,7 @@ export default async function PerformancePage({
               stats.profitPercentage >= 0 ? "text-success" : "text-destructive"
             }`}
           >
-            {kpi && !selectedMonth && kpi.roi !== null && kpi.roi !== undefined
-              ? `${kpi.roi.toFixed(2)}%`
-              : `${stats.profitPercentage.toFixed(2)}%`}
+            {`${stats.profitPercentage.toFixed(2)}%`}
           </p>
         </section>
         {/* Yield medio por apuesta */}
@@ -87,12 +74,7 @@ export default async function PerformancePage({
               stats.yieldPerBet >= 0 ? "text-success" : "text-destructive"
             }`}
           >
-            {kpi &&
-            !selectedMonth &&
-            kpi.yield_por_apuesta !== null &&
-            kpi.yield_por_apuesta !== undefined
-              ? `€${kpi.yield_por_apuesta.toFixed(2)}`
-              : `€${stats.yieldPerBet.toFixed(2)}`}
+            {`€${stats.yieldPerBet.toFixed(2)}`}
           </p>
         </section>
         {/* Hit Rate */}
@@ -100,19 +82,17 @@ export default async function PerformancePage({
           <h3 className="text-lg font-semibold text-primary mb-1">Hit Rate</h3>
           <p
             className={`text-2xl font-bold ${
-              kpi &&
-              kpi.hit_rate !== null &&
-              kpi.hit_rate !== undefined &&
-              kpi.hit_rate >= 0
+              stats.betsWon + stats.betsLost > 0 &&
+              stats.betsWon / (stats.betsWon + stats.betsLost) > 0
                 ? "text-success"
                 : "text-destructive"
             }`}
           >
-            {kpi &&
-            !selectedMonth &&
-            kpi.hit_rate !== null &&
-            kpi.hit_rate !== undefined
-              ? `${kpi.hit_rate.toFixed(2)}%`
+            {stats.betsWon + stats.betsLost > 0
+              ? `${(
+                  (stats.betsWon / (stats.betsWon + stats.betsLost)) *
+                  100
+                ).toFixed(2)}%`
               : "-"}
           </p>
         </section>
