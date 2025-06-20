@@ -1,6 +1,18 @@
-
-export type BetCategory = "Fútbol" | "Tenis" | "Baloncesto" | "eSports" | "Deportes de Motor" | "Otro";
-export const BET_CATEGORIES: BetCategory[] = ["Fútbol", "Tenis", "Baloncesto", "eSports", "Deportes de Motor", "Otro"];
+export type BetCategory =
+  | "Fútbol"
+  | "Tenis"
+  | "Baloncesto"
+  | "eSports"
+  | "Deportes de Motor"
+  | "Otro";
+export const BET_CATEGORIES: BetCategory[] = [
+  "Fútbol",
+  "Tenis",
+  "Baloncesto",
+  "eSports",
+  "Deportes de Motor",
+  "Otro",
+];
 
 // BetStatus remains in English for data consistency, translation happens at display layer.
 export type BetStatus = "Pending" | "Won" | "Lost" | "Void" | "CashedOut";
@@ -16,6 +28,8 @@ export interface Bet {
   createdAt: string; // ISO Date string
   resolvedAt?: string; // ISO Date string
   actualWinnings?: number;
+  retorno?: number | null;
+  beneficio?: number | null;
 }
 
 export type TransactionType = "Depósito" | "Retiro" | "Compra de Picks";
@@ -59,4 +73,5 @@ export interface OverallStats {
   totalWagered: number;
   totalNetWinnings: number;
   profitPercentage: number;
+  yieldPerBet: number; // NUEVO
 }

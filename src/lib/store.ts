@@ -270,3 +270,24 @@ export const getUniqueBetMonths = async (): Promise<string[]> => {
     return [];
   }
 };
+
+// --- KPIs desde la vista SQL ---
+export type KpiBets = {
+  total_resueltas: number;
+  total_apuestas: number;
+  stake_total: number;
+  profit_total: number;
+  roi: number;
+  yield_por_apuesta: number;
+  hit_rate: number;
+};
+
+export const getKpiBets = async (): Promise<KpiBets | null> => {
+  // @ts-expect-error: la vista kpi_bets no está en los tipos generados
+  const { data, error } = await supabase.from("kpi_bets").select("*").single();
+  if (error) {
+    console.error("Error fetching KPIs from Supabase:", error);
+    return null;
+  }
+  return data as unknown as KpiBets;
+};

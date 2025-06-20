@@ -22,6 +22,8 @@ export interface Database {
           created_at: string;
           resolved_at: string | null;
           actual_winnings: number | null;
+          retorno: number | null;
+          beneficio: number | null;
         };
         Insert: {
           // Lo que necesitas para un INSERT
