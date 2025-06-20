@@ -3,3 +3,4 @@ ignoredBuiltDependencies:
   - esbuild
   - protobufjs
   - sharp
+  - supabase
