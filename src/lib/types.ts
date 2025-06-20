@@ -4,13 +4,18 @@ export type BetCategory =
   | "Baloncesto"
   | "eSports"
   | "Deportes de Motor"
-  | "Otro";
+  | "Béisbol"
+  | "Ping Pong"
+  | "Otro"
+  | (string & {}); // Permitir categorías personalizadas
 export const BET_CATEGORIES: BetCategory[] = [
   "Fútbol",
   "Tenis",
   "Baloncesto",
   "eSports",
   "Deportes de Motor",
+  "Béisbol",
+  "Ping Pong",
   "Otro",
 ];
 
